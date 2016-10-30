@@ -10,8 +10,9 @@ class Player {
   private:
     static const byte BULLETS_LENGTH = 3;
     static const uint32_t COOLDOWN_MILLIS = 500;
-    static const int VERTICAL_BOUND = 15;
-    static const int HORIZONTAL_BOUND = 25;
+    static const int VERTICAL_BOUND = 20;
+    static const int HORIZONTAL_BOUND = 42;
+    static const int PLAYER_SPEED = 2;
 
     char *playerImage;
     byte x;
@@ -32,8 +33,8 @@ class Player {
     }
 
     void moveCamera(int offsetX, int offsetY) {
-      int posX = Camera::getInstance()->getX() +x;
-      int posY = Camera::getInstance()->getY() +y;
+      int posX = Camera::getInstance()->getX() + x;
+      int posY = Camera::getInstance()->getY() + y;
 
       if (posX <= HORIZONTAL_BOUND && offsetX > 0 ||
           posX >= WIDTH - HORIZONTAL_BOUND - 8 && offsetX < 0 ||
@@ -56,21 +57,21 @@ class Player {
 
       //move player
       if (arduboy.pressed(RIGHT_BUTTON) && x < Camera::getInstance()->getW() - 8) {
-        x++;
+        x = min(x+PLAYER_SPEED,Camera::getInstance()->getW() - 8);
         playerImage = playerWalkRight;
       }
 
       if (arduboy.pressed(LEFT_BUTTON) && x > 0) {
-        x--;
+        x = max(x-PLAYER_SPEED,0);
         playerImage = playerWalkLeft;
       }
 
       if (arduboy.pressed(UP_BUTTON) && y > 0) {
-        y--;
+        y =max(y-PLAYER_SPEED,0);
       }
 
       if (arduboy.pressed(DOWN_BUTTON) && y < Camera::getInstance()->getH() - 8) {
-        y++;
+        y = min(y+PLAYER_SPEED,Camera::getInstance()->getH() - 8);
       }
 
       moveCamera(previousX - x, previousY - y);

@@ -10,6 +10,7 @@
 typedef boolean BulletDirection;
 
 class Bullet {
+  static const int BULLET_SPEED = 7;
   private:
     BulletDirection direction;
     byte x;
@@ -26,9 +27,9 @@ class Bullet {
     void update() {
       if (active) {
         if (direction == BULLET_RIGHT) {
-          x += 5;
+          x += BULLET_SPEED;
         } else if (direction == BULLET_LEFT) {
-          x -= 5;
+          x -= BULLET_SPEED;
         }
 
         int cameraX = Camera::getInstance()->getX() + x;
@@ -54,6 +55,8 @@ class Bullet {
       this->y = y;
       this->direction = direction;
       active = true;
+      arduboy.tunes.tone(200, 50);
+      arduboy.tunes.tone(100, 100);
     }
 };
 
