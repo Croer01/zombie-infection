@@ -3,7 +3,7 @@
 
 #include "globals.h"
 #include "Bullet.h"
-#include "PlayerSprite.h"
+#include "Sprites.h"
 #include "Camera.h"
 
 class Player {
@@ -87,6 +87,7 @@ class Player {
         bullets[i].update();
       }
     };
+    
     void render() {
       arduboy.fillRect(Camera::getInstance()->getX() + x - 1, Camera::getInstance()->getY() + y - 1, 10, 10, BLACK);
       arduboy.drawBitmap(Camera::getInstance()->getX() + x, Camera::getInstance()->getY() +  y, playerImage, 8, 8, WHITE);
@@ -94,6 +95,13 @@ class Player {
       for (byte i = 0; i < BULLETS_LENGTH; i++) {
         bullets[i].render();
       }
+    };
+
+    int getX() {
+      return x;
+    };
+    int getY() {
+      return y;
     };
 };
 

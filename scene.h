@@ -4,12 +4,14 @@
 #include "globals.h"
 #include "Player.h"
 #include "Camera.h"
+#include "Enemy.h"
 
 class Scene {
     static const int CELLS_X_NUM = 20;
     static const int CELLS_Y_NUM = 10;
     static const int CELL_SIZE = 10;
     Player player;
+    Enemy enemy;
 
   public:
     Scene() {
@@ -18,6 +20,7 @@ class Scene {
 
     void update() {
       player.update();
+      enemy.update(&player);
     };
 
     void render() {
@@ -29,6 +32,7 @@ class Scene {
       }
 
       player.render();
+      enemy.render();
     };
 };
 
