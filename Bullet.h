@@ -54,7 +54,7 @@ class Bullet {
       active = false;
     }
 
-    void respawn(byte x, byte y, BulletDirection direction) {
+    void respawn(int x, int y, BulletDirection direction) {
       position.setX(x);
       position.setY(y);
       this->direction = direction;
