@@ -11,16 +11,22 @@ class Scene {
     static const int CELLS_Y_NUM = 10;
     static const int CELL_SIZE = 10;
     Player player;
-    Enemy enemy;
+    Enemy enemy[ENEMIES_LENGTH];
 
   public:
     Scene() {
-      Camera::getInstance()->setBounds(CELLS_X_NUM * CELL_SIZE, CELLS_Y_NUM * CELL_SIZE);
+      Camera::getInstance()->setBounds(CELLS_PER_ROW * CELL_SIZE, CELLS_PER_COLUMN * CELL_SIZE);
+      for (int i = 0; i < ENEMIES_LENGTH; i++) {
+        enemy[i].respawn(20 + i * 20, 20 + i * 20);
+      }
     }
 
     void update() {
       player.update();
-      enemy.update(&player);
+
+      for (int i = 0; i < ENEMIES_LENGTH; i++) {
+        enemy[i].update(&player);
+      }
     };
 
     void render() {
@@ -32,7 +38,9 @@ class Scene {
       }
 
       player.render();
-      enemy.render();
+      for (int i = 0; i < ENEMIES_LENGTH; i++) {
+        enemy[i].render();
+      }
     };
 };
 
