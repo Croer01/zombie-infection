@@ -59,7 +59,6 @@ class Bullet {
       position.setY(y);
       this->direction = direction;
       active = true;
-      arduboy.tunes.tone(200, 50);
       arduboy.tunes.tone(100, 100);
     }
 
