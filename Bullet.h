@@ -3,6 +3,7 @@
 
 #include "globals.h"
 #include "Camera.h"
+#include "SlimLib.h"
 
 #define BULLET_RIGHT true
 #define BULLET_LEFT false
@@ -10,16 +11,15 @@
 typedef boolean BulletDirection;
 
 class Bullet {
-  static const int BULLET_SPEED = 7;
+    static const int BULLET_SPEED = 7;
   private:
     BulletDirection direction;
-    byte x;
-    byte y;
+    Vector2 position;
     boolean active;
   public:
     Bullet() {
-      this->x = 0;
-      this->y = 0;
+      position.setX(0);
+      position.setY(0);
       this->direction = BULLET_LEFT;
       active = false;
     };
@@ -27,22 +27,22 @@ class Bullet {
     void update() {
       if (active) {
         if (direction == BULLET_RIGHT) {
-          x += BULLET_SPEED;
+          position.setX(position.getX() + BULLET_SPEED);
         } else if (direction == BULLET_LEFT) {
-          x -= BULLET_SPEED;
+          position.setX(position.getX() - BULLET_SPEED);
         }
 
-        int cameraX = Camera::getInstance()->getX() + x;
+        int cameraX = Camera::getInstance()->getX() + position.getX();
         if (cameraX < 0 || cameraX > WIDTH) {
-          active = false;
+          disable();
         }
       }
     };
 
     void render() {
       if (active) {
-        arduboy.fillCircle(Camera::getInstance()->getX() + x, Camera::getInstance()->getY() +  y, 2, BLACK);
-        arduboy.fillCircle(Camera::getInstance()->getX() + x, Camera::getInstance()->getY() +  y, 1, WHITE);
+        arduboy.fillCircle(Camera::getInstance()->getX() + position.getX(), Camera::getInstance()->getY() +  position.getY(), 2, BLACK);
+        arduboy.fillCircle(Camera::getInstance()->getX() + position.getX(), Camera::getInstance()->getY() +  position.getY(), 1, WHITE);
       }
     };
 
@@ -50,14 +50,22 @@ class Bullet {
       return active;
     }
 
+    disable() {
+      active = false;
+    }
+
     void respawn(byte x, byte y, BulletDirection direction) {
-      this->x = x;
-      this->y = y;
+      position.setX(x);
+      position.setY(y);
       this->direction = direction;
       active = true;
       arduboy.tunes.tone(200, 50);
       arduboy.tunes.tone(100, 100);
     }
+
+    Vector2 getPosition() {
+      return position;
+    };
 };
 
 #endif
