@@ -5,6 +5,7 @@
 #include "Bullet.h"
 #include "Sprites.h"
 #include "Camera.h"
+#include "SlimLib.h"
 
 class Player {
   private:
@@ -15,8 +16,7 @@ class Player {
     static const int PLAYER_SPEED = 2;
 
     char *playerImage;
-    int x;
-    int y;
+    Rect bounds;
     Bullet bullets[BULLETS_LENGTH];
     uint32_t timer;
 
@@ -25,7 +25,7 @@ class Player {
       byte i = 0;
       while (!active && i < BULLETS_LENGTH) {
         if (!bullets[i].isActive()) {
-          bullets[i].respawn(playerImage == playerWalkRight?x : x + 8, y + 4, playerImage == playerWalkRight);
+          bullets[i].respawn(playerImage == playerWalkRight ? bounds.getX() : bounds.getX() + bounds.getW(), bounds.getY() + 4, playerImage == playerWalkRight);
           active = true;
         }
         i++;
@@ -33,48 +33,50 @@ class Player {
     }
 
     void moveCamera(int offsetX, int offsetY) {
-      int posX = Camera::getInstance()->getX() + x;
-      int posY = Camera::getInstance()->getY() + y;
+      int posX = Camera::getInstance()->getX() + bounds.getX();
+      int posY = Camera::getInstance()->getY() + bounds.getY() ;
 
       if (posX <= HORIZONTAL_BOUND && offsetX > 0 ||
-          posX >= WIDTH - HORIZONTAL_BOUND - 8 && offsetX < 0 ||
+          posX >= WIDTH - HORIZONTAL_BOUND - bounds.getW() && offsetX < 0 ||
           posY <= VERTICAL_BOUND && offsetY > 0 ||
-          posY >= HEIGHT - VERTICAL_BOUND - 8 && offsetY < 0 ) {
+          posY >= HEIGHT - VERTICAL_BOUND - bounds.getH() && offsetY < 0 ) {
         Camera::getInstance()->moveCamera(offsetX, offsetY);
       }
     };
   public:
     Player() {
       this->playerImage = playerWalkRight;
-      x = 0;
-      y = 0;
+      bounds.setX(0);
+      bounds.setY(0);
+      bounds.setW(8);
+      bounds.setH(8);
       timer = millis();
     };
 
     void update() {
-      int previousX = x;
-      int previousY = y;
+      int previousX = bounds.getX();
+      int previousY = bounds.getY();
 
       //move player
-      if (arduboy.pressed(RIGHT_BUTTON) && x < Camera::getInstance()->getW() - 8) {
-        x = min(x + PLAYER_SPEED, Camera::getInstance()->getW() - 8);
+      if (arduboy.pressed(RIGHT_BUTTON) && bounds.getX() < Camera::getInstance()->getW() - bounds.getW()) {
+        bounds.setX(min(bounds.getX() + PLAYER_SPEED, Camera::getInstance()->getW() - bounds.getW()));
         playerImage = playerWalkRight;
       }
 
-      if (arduboy.pressed(LEFT_BUTTON) && x > 0) {
-        x = max(x - PLAYER_SPEED, 0);
+      if (arduboy.pressed(LEFT_BUTTON) && bounds.getX() > 0) {
+        bounds.setX(max(bounds.getX() - PLAYER_SPEED, 0));
         playerImage = playerWalkLeft;
       }
 
-      if (arduboy.pressed(UP_BUTTON) && y > 0) {
-        y = max(y - PLAYER_SPEED, 0);
+      if (arduboy.pressed(UP_BUTTON) && bounds.getY() > 0) {
+        bounds.setY(max(bounds.getY() - PLAYER_SPEED, 0));
       }
 
-      if (arduboy.pressed(DOWN_BUTTON) && y < Camera::getInstance()->getH() - 8) {
-        y = min(y + PLAYER_SPEED, Camera::getInstance()->getH() - 8);
+      if (arduboy.pressed(DOWN_BUTTON) && bounds.getY() < Camera::getInstance()->getH() - bounds.getH()) {
+        bounds.setY(min(bounds.getY() + PLAYER_SPEED, Camera::getInstance()->getH() - bounds.getH()));
       }
 
-      moveCamera(previousX - x, previousY - y);
+      moveCamera(previousX - bounds.getX(), previousY - bounds.getY() );
 
       //shoot
       if (timer <= millis() && arduboy.pressed(B_BUTTON)) {
@@ -89,8 +91,8 @@ class Player {
     };
 
     void render() {
-      arduboy.fillRect(Camera::getInstance()->getX() + x - 1, Camera::getInstance()->getY() + y - 1, 10, 10, BLACK);
-      arduboy.drawBitmap(Camera::getInstance()->getX() + x, Camera::getInstance()->getY() +  y, playerImage, 8, 8, WHITE);
+      arduboy.fillRect(Camera::getInstance()->getX() + bounds.getX() - 1, Camera::getInstance()->getY() + bounds.getY() - 1, bounds.getW() + 2, bounds.getH() + 2, BLACK);
+      arduboy.drawBitmap(Camera::getInstance()->getX() + bounds.getX(), Camera::getInstance()->getY() + bounds.getY() , playerImage, bounds.getW(), bounds.getH(), WHITE);
 
       for (byte i = 0; i < BULLETS_LENGTH; i++) {
         bullets[i].render();
@@ -102,12 +104,9 @@ class Player {
       return bullets;
     };
 
-    int getX() {
-      return x;
-    };
-    int getY() {
-      return y;
-    };
+    Rect getBounds() {
+      return bounds;
+    }
 };
 
 #endif

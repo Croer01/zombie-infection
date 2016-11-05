@@ -26,17 +26,17 @@ class Enemy {
     void update(Player *player) {
       if (active) {
         //move to player
-        if (bounds.getX() < player->getX()) {
+        if (bounds.getX() < player->getBounds().getX()) {
           bounds.setX(bounds.getX() + 1);
           this->enemyImage = enenmyWalkRight;
-        } else if (bounds.getX() > player->getX()) {
+        } else if (bounds.getX() > player->getBounds().getX()) {
           bounds.setX(bounds.getX() - 1);
           this->enemyImage = enenmyWalkLeft;
         }
 
-        if (bounds.getY() < player->getY())
+        if (bounds.getY() < player->getBounds().getY())
           bounds.setY(bounds.getY() + 1);
-        else if (bounds.getY() > player->getY())
+        else if (bounds.getY() > player->getBounds().getY())
           bounds.setY(bounds.getY() - 1);
 
         //check if hurt by bullet
