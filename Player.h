@@ -25,7 +25,7 @@ class Player {
       byte i = 0;
       while (!active && i < BULLETS_LENGTH) {
         if (!bullets[i].isActive()) {
-          bullets[i].respawn(x, y + 4, playerImage == playerWalkRight);
+          bullets[i].respawn(playerImage == playerWalkRight?x : x + 8, y + 4, playerImage == playerWalkRight);
           active = true;
         }
         i++;
