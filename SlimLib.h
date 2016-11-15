@@ -47,11 +47,11 @@ class Rect {
       this->h = h;
     }
 
-    boolean pointIsInside(Vector2 point) {
+    bool pointIsInside(Vector2 point) {
       return x <= point.getX() && point.getX() <= x + w && y <= point.getY() && point.getY() <= y + h;
     };
 
-    boolean rectIsInside(Rect other) {
+    bool rectIsInside(Rect other) {
       return (x <= other.getX() && other.getX() <= x + w && y <= other.getY() && other.getY() <= y + h) ||
              (x <= other.getX() + other.getW() && other.getX() + other.getW() <= x + w && y <= other.getY() + other.getH() && other.getY() + other.getH() <= y + h);
     };

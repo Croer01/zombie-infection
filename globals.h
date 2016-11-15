@@ -3,6 +3,6 @@
 
 #include "Arduboy.h"
 
-Arduboy arduboy;
+extern Arduboy arduboy;
 
 #endif

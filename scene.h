@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Camera.h"
 #include "Enemy.h"
+#include "SlimLib.h"
 
 PROGMEM const unsigned char sceneLayout[] = {
   0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
@@ -51,6 +52,8 @@ class Scene {
 
   public:
     Scene() {
+      player.getBounds()->setX(2 * CELL_SIZE);
+      player.getBounds()->setY(2 * CELL_SIZE);
       Camera::getInstance()->setBounds(CELLS_PER_ROW * CELL_SIZE, CELLS_PER_COLUMN * CELL_SIZE);
       for (int i = 0; i < ENEMIES_LENGTH; i++) {
         enemy[i].respawn(20 + i * 20, 20 + i * 20);
@@ -81,59 +84,59 @@ class Scene {
       }
     };
 
-  private:
-
-    void checkCollisionAndMove(Rect *bounds, int& velX, int& velY) {
+    void checkCollisionAndMove(Rect& bounds, int& velX, int& velY) {
       //check horizontal collision
       if (velX != 0) {
-        Vector2 first = {x: bounds->getX() + velX, y: bounds->getY()};
-        Vector2 second = {x: bounds->getX() + velX, y: bounds->getY() + bounds->getH()};
+        Vector2 first = {x: bounds.getX() + velX, y: bounds.getY()};
+        Vector2 second = {x: bounds.getX() + velX, y: bounds.getY() + bounds.getH()};
 
         if (getCellByPos(first) == 0x01) {
           if (velX < 0) {
-            bounds->setX(first.getX() / CELLS_PER_ROW + CELL_SIZE);
+            bounds.setX(first.getX() / CELLS_PER_ROW + CELL_SIZE);
           } else if (velX < 0) {
-            bounds->setX(first.getX() / CELLS_PER_ROW - bounds->getW());
+            bounds.setX(first.getX() / CELLS_PER_ROW - bounds.getW());
           }
           velX = 0;
         } if (getCellByPos(second) == 0x01) {
           if (velX < 0) {
-            bounds->setX(second.getX() / CELLS_PER_ROW + CELL_SIZE);
+            bounds.setX(second.getX() / CELLS_PER_ROW + CELL_SIZE);
           } else if (velX < 0) {
-            bounds->setX(second.getX() / CELLS_PER_ROW - bounds->getW());
+            bounds.setX(second.getX() / CELLS_PER_ROW - bounds.getW());
           }
         } else {
-          bounds->setX(second.getX() + velX);
+          bounds.setX(second.getX() + velX);
         }
         velX = 0;
       }
 
       //check vertical collision
       if (velY != 0) {
-        Vector2 first = {x: bounds->getX(), y: bounds->getY() + velY};
-        Vector2 second = {x: bounds->getX() + bounds->getW(), y: bounds->getY() + velY};
+        Vector2 first = {x: bounds.getX(), y: bounds.getY() + velY};
+        Vector2 second = {x: bounds.getX() + bounds.getW(), y: bounds.getY() + velY};
 
         if (getCellByPos(first) == 0x01) {
           if (velY < 0) {
-            bounds->setY(first.getY() / CELLS_PER_COLUMN + CELL_SIZE);
+            bounds.setY(first.getY() / CELLS_PER_COLUMN + CELL_SIZE);
           } else if (velY < 0) {
-            bounds->setY(first.getY() / CELLS_PER_COLUMN - bounds->getH());
+            bounds.setY(first.getY() / CELLS_PER_COLUMN - bounds.getH());
           }
           velY = 0;
         } else if (getCellByPos(second) == 0x01) {
           if (velY < 0) {
-            bounds->setY(first.getY() / CELLS_PER_COLUMN + CELL_SIZE);
+            bounds.setY(first.getY() / CELLS_PER_COLUMN + CELL_SIZE);
           } else if (velY < 0) {
-            bounds->setY(first.getY() / CELLS_PER_COLUMN - bounds->getH());
+            bounds.setY(first.getY() / CELLS_PER_COLUMN - bounds.getH());
           }
           velY = 0;
         } else {
-          bounds->setY(second.getY() + velY);
+          bounds.setY(second.getY() + velY);
         }
       }
 
     };
 
+  private:
+  
     unsigned char getCellByPos(Vector2 pos) {
       int x = pos.getX() / CELLS_PER_ROW;
       int y = pos.getY() / CELLS_PER_COLUMN;
