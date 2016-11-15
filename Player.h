@@ -53,30 +53,32 @@ class Player {
       timer = millis();
     };
 
-    void update() {
-      int previousX = bounds.getX();
-      int previousY = bounds.getY();
+    void update(Scene *scene) {
+      int velX = 0;
+      int velY = 0;
 
       //move player
       if (arduboy.pressed(RIGHT_BUTTON) && bounds.getX() < Camera::getInstance()->getW() - bounds.getW()) {
-        bounds.setX(min(bounds.getX() + PLAYER_SPEED, Camera::getInstance()->getW() - bounds.getW()));
+        velX = min(bounds.getX() + PLAYER_SPEED, Camera::getInstance()->getW() - bounds.getW());
         playerImage = playerWalkRight;
       }
 
       if (arduboy.pressed(LEFT_BUTTON) && bounds.getX() > 0) {
-        bounds.setX(max(bounds.getX() - PLAYER_SPEED, 0));
+        velX = max(bounds.getX() - PLAYER_SPEED, 0);
         playerImage = playerWalkLeft;
       }
 
       if (arduboy.pressed(UP_BUTTON) && bounds.getY() > 0) {
-        bounds.setY(max(bounds.getY() - PLAYER_SPEED, 0));
+        velY = max(bounds.getY() - PLAYER_SPEED, 0);
       }
 
       if (arduboy.pressed(DOWN_BUTTON) && bounds.getY() < Camera::getInstance()->getH() - bounds.getH()) {
-        bounds.setY(min(bounds.getY() + PLAYER_SPEED, Camera::getInstance()->getH() - bounds.getH()));
+        velY = min(bounds.getY() + PLAYER_SPEED, Camera::getInstance()->getH() - bounds.getH());
       }
 
-      moveCamera(previousX - bounds.getX(), previousY - bounds.getY() );
+      scene->checkCollisionAndMove(this->bounds, velX, velY)
+
+      moveCamera(velX, velY);
 
       //shoot
       if (timer <= millis() && arduboy.pressed(B_BUTTON)) {
