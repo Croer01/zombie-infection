@@ -2,6 +2,7 @@
 #include "globals.h"
 #include "Sprites.h"
 #include "Player.h"
+#include "scene.h"
 #include "Camera.h"
 
 Enemy::Enemy() {
@@ -12,22 +13,28 @@ Enemy::Enemy() {
   bounds.setH(12);
 };
 
-void Enemy::update(Player *player) {
+void Enemy::update(Player *player, Scene *scene) {
   if (active) {
+    int velX = 0;
+    int velY = 0;
     //move to player
     if (bounds.getX() < player->getBounds()->getX()) {
-      bounds.setX(bounds.getX() + 1);
+      velX = 1;
       this->enemyImage = enenmyWalkRight;
     } else if (bounds.getX() > player->getBounds()->getX()) {
-      bounds.setX(bounds.getX() - 1);
+      velX = -1;
       this->enemyImage = enenmyWalkLeft;
     }
 
     if (bounds.getY() < player->getBounds()->getY())
-      bounds.setY(bounds.getY() + 1);
+      velY = 1;
     else if (bounds.getY() > player->getBounds()->getY())
-      bounds.setY(bounds.getY() - 1);
+      velY = -1;
 
+    scene->checkCollisionAndMove(this->bounds, velX, velY);
+
+    bounds.setX(bounds.getX() + velX);
+    bounds.setY(bounds.getY() + velY);
     //check if hurt by bullet
 
     size_t bulletsLength = 0;

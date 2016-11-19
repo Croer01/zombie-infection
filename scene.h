@@ -64,7 +64,7 @@ class Scene {
       player.update(this);
 
       for (int i = 0; i < ENEMIES_LENGTH; i++) {
-        enemy[i].update(&player);
+        enemy[i].update(&player, this);
       }
     };
 
@@ -83,12 +83,6 @@ class Scene {
         enemy[i].render();
       }
     };
-
-
-
-
-
-
 
     void checkCollisionAndMove(Rect& bounds, int& velX, int& velY) {
       //check horizontal collision

@@ -5,6 +5,7 @@
 #include "SlimLib.h"
 
 class Player;
+class Scene;
 
 class Enemy {
   private:
@@ -17,7 +18,7 @@ class Enemy {
   public:
     Enemy();
 
-    void update(Player *player);
+    void update(Player *player, Scene *scene);
 
     void render();
 
