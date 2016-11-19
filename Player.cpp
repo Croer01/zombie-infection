@@ -41,29 +41,35 @@ Player::Player() {
 void Player::update(Scene *scene) {
   int velX = 0;
   int velY = 0;
+  int previousX = bounds->getX();
+  int previousY = bounds->getY();
 
   //move player
   if (arduboy.pressed(RIGHT_BUTTON) && bounds->getX() < Camera::getInstance()->getW() - bounds->getW()) {
-    velX = min(bounds->getX() + PLAYER_SPEED, Camera::getInstance()->getW() - bounds->getW());
+    velX = PLAYER_SPEED;
     playerImage = playerWalkRight;
   }
 
   if (arduboy.pressed(LEFT_BUTTON) && bounds->getX() > 0) {
-    velX = max(bounds->getX() - PLAYER_SPEED, 0);
+    velX = -PLAYER_SPEED;
     playerImage = playerWalkLeft;
   }
 
   if (arduboy.pressed(UP_BUTTON) && bounds->getY() > 0) {
-    velY = max(bounds->getY() - PLAYER_SPEED, 0);
+    velY = -PLAYER_SPEED;
   }
 
   if (arduboy.pressed(DOWN_BUTTON) && bounds->getY() < Camera::getInstance()->getH() - bounds->getH()) {
-    velY = min(bounds->getY() + PLAYER_SPEED, Camera::getInstance()->getH() - bounds->getH());
+    velY = PLAYER_SPEED;
   }
 
   scene->checkCollisionAndMove(*this->bounds, velX, velY);
 
-  moveCamera(velX, velY);
+  //clamp position to camera limits
+  bounds->setX(constrain(bounds->getX(), 0, Camera::getInstance()->getW() - bounds->getW()));
+  bounds->setY(constrain(bounds->getY(), 0, Camera::getInstance()->getH() - bounds->getH()));
+
+  moveCamera(previousX - bounds->getX(), previousY - bounds->getY());
 
   //shoot
   if (timer <= millis() && arduboy.pressed(B_BUTTON)) {

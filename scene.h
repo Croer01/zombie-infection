@@ -87,59 +87,63 @@ class Scene {
     void checkCollisionAndMove(Rect& bounds, int& velX, int& velY) {
       //check horizontal collision
       if (velX != 0) {
+        Serial.print("X: ");
+Serial.println(velX);
         Vector2 first = {x: bounds.getX() + velX, y: bounds.getY()};
         Vector2 second = {x: bounds.getX() + velX, y: bounds.getY() + bounds.getH()};
 
         if (getCellByPos(first) == 0x01) {
           if (velX < 0) {
-            bounds.setX(first.getX() / CELLS_PER_ROW + CELL_SIZE);
-          } else if (velX < 0) {
-            bounds.setX(first.getX() / CELLS_PER_ROW - bounds.getW());
+            bounds.setX(first.getX() / CELLS_PER_ROW * CELL_SIZE + CELL_SIZE);
+          } else if (velX > 0) {
+            bounds.setX(first.getX() / CELLS_PER_ROW * CELL_SIZE - bounds.getW());
           }
           velX = 0;
-        } if (getCellByPos(second) == 0x01) {
+        } else if (getCellByPos(second) == 0x01) {
           if (velX < 0) {
-            bounds.setX(second.getX() / CELLS_PER_ROW + CELL_SIZE);
-          } else if (velX < 0) {
-            bounds.setX(second.getX() / CELLS_PER_ROW - bounds.getW());
+            bounds.setX(second.getX() / CELLS_PER_ROW * CELL_SIZE + CELL_SIZE);
+          } else if (velX > 0) {
+            bounds.setX(second.getX() / CELLS_PER_ROW * CELL_SIZE - bounds.getW());
           }
         } else {
-          bounds.setX(second.getX() + velX);
+          bounds.setX(bounds.getX() + velX);
         }
         velX = 0;
       }
 
       //check vertical collision
       if (velY != 0) {
+        Serial.print("Y: ");
+Serial.println(velY);
         Vector2 first = {x: bounds.getX(), y: bounds.getY() + velY};
         Vector2 second = {x: bounds.getX() + bounds.getW(), y: bounds.getY() + velY};
 
         if (getCellByPos(first) == 0x01) {
           if (velY < 0) {
-            bounds.setY(first.getY() / CELLS_PER_COLUMN + CELL_SIZE);
-          } else if (velY < 0) {
-            bounds.setY(first.getY() / CELLS_PER_COLUMN - bounds.getH());
+            bounds.setY(first.getY() / CELLS_PER_COLUMN * CELL_SIZE + CELL_SIZE);
+          } else if (velY > 0) {
+            bounds.setY(first.getY() / CELLS_PER_COLUMN * CELL_SIZE - bounds.getH());
           }
           velY = 0;
         } else if (getCellByPos(second) == 0x01) {
           if (velY < 0) {
-            bounds.setY(first.getY() / CELLS_PER_COLUMN + CELL_SIZE);
-          } else if (velY < 0) {
-            bounds.setY(first.getY() / CELLS_PER_COLUMN - bounds.getH());
+            bounds.setY(second.getY() / CELLS_PER_COLUMN * CELL_SIZE  + CELL_SIZE);
+          } else if (velY > 0) {
+            bounds.setY(second.getY() / CELLS_PER_COLUMN * CELL_SIZE - bounds.getH());
           }
           velY = 0;
         } else {
-          bounds.setY(second.getY() + velY);
+          bounds.setY(bounds.getY() + velY);
         }
       }
 
     };
 
   private:
-  
+
     unsigned char getCellByPos(Vector2 pos) {
-      int x = pos.getX() / CELLS_PER_ROW;
-      int y = pos.getY() / CELLS_PER_COLUMN;
+      int x = pos.getX() / CELL_SIZE;
+      int y = pos.getY() / CELL_SIZE;
       return pgm_read_byte_near(sceneLayout + (x * CELLS_PER_ROW + y));
     };
 };
