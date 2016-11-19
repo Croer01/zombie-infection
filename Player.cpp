@@ -66,8 +66,8 @@ void Player::update(Scene *scene) {
   scene->checkCollisionAndMove(*this->bounds, velX, velY);
 
   //clamp position to camera limits
-  bounds->setX(constrain(bounds->getX(), 0, Camera::getInstance()->getW() - bounds->getW()));
-  bounds->setY(constrain(bounds->getY(), 0, Camera::getInstance()->getH() - bounds->getH()));
+  bounds->setX(constrain(bounds->getX() + velX, 0, Camera::getInstance()->getW() - bounds->getW()));
+  bounds->setY(constrain(bounds->getY() + velY, 0, Camera::getInstance()->getH() - bounds->getH()));
 
   moveCamera(previousX - bounds->getX(), previousY - bounds->getY());
 

@@ -84,59 +84,34 @@ class Scene {
       }
     };
 
+
+
+
+
+
+
     void checkCollisionAndMove(Rect& bounds, int& velX, int& velY) {
       //check horizontal collision
       if (velX != 0) {
-        Serial.print("X: ");
-Serial.println(velX);
-        Vector2 first = {x: bounds.getX() + velX, y: bounds.getY()};
-        Vector2 second = {x: bounds.getX() + velX, y: bounds.getY() + bounds.getH()};
+        int x = velX > 0 ? bounds.getX() + bounds.getW()+1 : bounds.getX();
+        Vector2 first = {x: x + velX, y: bounds.getY()};
+        Vector2 second = {x: x + velX, y: bounds.getY() + bounds.getH()};
 
-        if (getCellByPos(first) == 0x01) {
-          if (velX < 0) {
-            bounds.setX(first.getX() / CELLS_PER_ROW * CELL_SIZE + CELL_SIZE);
-          } else if (velX > 0) {
-            bounds.setX(first.getX() / CELLS_PER_ROW * CELL_SIZE - bounds.getW());
-          }
-          velX = 0;
-        } else if (getCellByPos(second) == 0x01) {
-          if (velX < 0) {
-            bounds.setX(second.getX() / CELLS_PER_ROW * CELL_SIZE + CELL_SIZE);
-          } else if (velX > 0) {
-            bounds.setX(second.getX() / CELLS_PER_ROW * CELL_SIZE - bounds.getW());
-          }
-        } else {
-          bounds.setX(bounds.getX() + velX);
+        if (getCellByPos(first) == 0x01 || getCellByPos(second) == 0x01) {
+          velX = calculateNewVelocity(x, velX);
         }
-        velX = 0;
       }
 
       //check vertical collision
       if (velY != 0) {
-        Serial.print("Y: ");
-Serial.println(velY);
-        Vector2 first = {x: bounds.getX(), y: bounds.getY() + velY};
-        Vector2 second = {x: bounds.getX() + bounds.getW(), y: bounds.getY() + velY};
+        int y = velY > 0 ? bounds.getY() + bounds.getH()+1 : bounds.getY();
+        Vector2 first = {x: bounds.getX(), y: y + velY };
+        Vector2 second = {x: bounds.getX() + bounds.getW(), y: y + velY };
 
-        if (getCellByPos(first) == 0x01) {
-          if (velY < 0) {
-            bounds.setY(first.getY() / CELLS_PER_COLUMN * CELL_SIZE + CELL_SIZE);
-          } else if (velY > 0) {
-            bounds.setY(first.getY() / CELLS_PER_COLUMN * CELL_SIZE - bounds.getH());
-          }
-          velY = 0;
-        } else if (getCellByPos(second) == 0x01) {
-          if (velY < 0) {
-            bounds.setY(second.getY() / CELLS_PER_COLUMN * CELL_SIZE  + CELL_SIZE);
-          } else if (velY > 0) {
-            bounds.setY(second.getY() / CELLS_PER_COLUMN * CELL_SIZE - bounds.getH());
-          }
-          velY = 0;
-        } else {
-          bounds.setY(bounds.getY() + velY);
+        if (getCellByPos(first) == 0x01 || getCellByPos(second) == 0x01) {
+          velY = calculateNewVelocity(y, velY);
         }
       }
-
     };
 
   private:
@@ -145,6 +120,19 @@ Serial.println(velY);
       int x = pos.getX() / CELL_SIZE;
       int y = pos.getY() / CELL_SIZE;
       return pgm_read_byte_near(sceneLayout + (x * CELLS_PER_ROW + y));
+    };
+
+
+    int calculateNewVelocity(int currentPos, int velocity) {
+      int newVelocity = velocity;
+      int cellPosition = (currentPos + velocity) / CELL_SIZE;
+
+      if (velocity < 0) {
+        newVelocity = currentPos - (cellPosition * CELL_SIZE + CELL_SIZE);
+      } else if (velocity > 0) {
+        newVelocity = cellPosition * CELL_SIZE - currentPos;
+      }
+      return newVelocity;
     };
 };
 
