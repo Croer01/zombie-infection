@@ -62,6 +62,16 @@ class Scene {
 
     void update() {
       player.update(this);
+      
+      //check bullets collisions
+      size_t bulletsLength = 0;
+      Bullet *playerBullets = player.getBullets(bulletsLength);
+
+      for (int i = 0; i < bulletsLength; i++) {
+        if (playerBullets[i].isActive() && getCellByPos(playerBullets[i].getPosition()) == 0x01) {
+          playerBullets[i].disable();
+        }
+      }
 
       for (int i = 0; i < ENEMIES_LENGTH; i++) {
         enemy[i].update(&player, this);
@@ -87,7 +97,7 @@ class Scene {
     void checkCollisionAndMove(Rect& bounds, int& velX, int& velY) {
       //check horizontal collision
       if (velX != 0) {
-        int x = velX > 0 ? bounds.getX() + bounds.getW()+1 : bounds.getX();
+        int x = velX > 0 ? bounds.getX() + bounds.getW() + 1 : bounds.getX();
         Vector2 first = {x: x + velX, y: bounds.getY()};
         Vector2 second = {x: x + velX, y: bounds.getY() + bounds.getH()};
 
@@ -98,7 +108,7 @@ class Scene {
 
       //check vertical collision
       if (velY != 0) {
-        int y = velY > 0 ? bounds.getY() + bounds.getH()+1 : bounds.getY();
+        int y = velY > 0 ? bounds.getY() + bounds.getH() + 1 : bounds.getY();
         Vector2 first = {x: bounds.getX(), y: y + velY };
         Vector2 second = {x: bounds.getX() + bounds.getW(), y: y + velY };
 
