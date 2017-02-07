@@ -8,44 +8,20 @@
 #include "SlimLib.h"
 #include "Sprites.h"
 
+/* 0 1 2
+ * 7 8 3
+ * 6 5 4
+ */
 PROGMEM const unsigned char sceneLayout[] = {
-  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-  1, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1,
-  1, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1,
-  1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1,  
-  1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1,
-  1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1,
-  1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1,
-  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+  0,1,1,2,
+  7,8,8,3,
+  7,8,9,3,
+  6,5,5,4
 };
 
 class Scene {
-    static const int CELLS_PER_ROW = 32;
-    static const int CELLS_PER_COLUMN = 32;
+    static const int CELLS_PER_ROW = 32; //4 chunks of 8 tiles
+    static const int CELLS_PER_COLUMN = 32; //4 chunks of 8 tiles
     static const int CELL_SIZE = 8;
     static const byte ENEMIES_LENGTH = 5;
     Player player;
@@ -80,14 +56,13 @@ class Scene {
     };
 
     void render() {
-      for (int i = 0; i < CELLS_PER_ROW; i++) {
-        for (int j = 0; j < CELLS_PER_COLUMN; j++) {
-          int index = j * CELLS_PER_ROW + i;
+      for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+          int index = j * 4 + i;
 
-          int tile = (int)pgm_read_byte_near(sceneLayout + index);
-
-          if(tile != 0)
-            arduboy.drawBitmap(Camera::getInstance()->getX() + i * CELL_SIZE, Camera::getInstance()->getY() + j * CELL_SIZE, sceneAtlas + tile * CELL_SIZE, CELL_SIZE, CELL_SIZE, WHITE);
+          int chunkId = (int)pgm_read_byte_near(sceneLayout + index);
+          char *chunk = sceneChunks[chunkId];
+          renderChunk(i * 8,j * 8,chunk);
         }
       }
       
@@ -96,6 +71,20 @@ class Scene {
         enemy[i].render();
       }
     };
+
+    void renderChunk(int xOffset,int yOffset,const char *chunk){
+      for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+          int index = j * 8 + i;
+          int tile = (int)pgm_read_byte_near(chunk + index);
+
+          int x = xOffset * CELL_SIZE + i * CELL_SIZE;
+          int y = yOffset * CELL_SIZE + j * CELL_SIZE;
+          if(tile != 0)
+            arduboy.drawBitmap(Camera::getInstance()->getX() + x, Camera::getInstance()->getY() + y, sceneAtlas + tile * CELL_SIZE, CELL_SIZE, CELL_SIZE, WHITE);
+        }
+      }
+    }
 
     void checkCollisionAndMove(Rect& bounds, int& velX, int& velY) {
       //check horizontal collision
@@ -126,7 +115,11 @@ class Scene {
     unsigned char getCellByPos(Vector2 pos) {
       int x = pos.getX() / CELL_SIZE;
       int y = pos.getY() / CELL_SIZE;
-      return pgm_read_byte_near(sceneLayout + (x * CELLS_PER_ROW + y));
+      int chunkXOffset = x / 8;
+      int chunkYOffset = y / 8;
+      
+      char *chunk = sceneChunks[(int)pgm_read_byte_near(sceneLayout + (chunkXOffset+ chunkYOffset * 4))];
+      return pgm_read_byte_near(chunk + ((y - chunkYOffset * 8) * 8) + (x - chunkXOffset * 8));
     };
 
 
