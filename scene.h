@@ -4,7 +4,7 @@
 #include "globals.h"
 #include "Player.h"
 #include "Camera.h"
-#include "Enemy.h"
+#include "EnemySpawner.h"
 #include "SlimLib.h"
 #include "Sprites.h"
 
@@ -23,18 +23,17 @@ class Scene {
     static const int CELLS_PER_ROW = 32; //4 chunks of 8 tiles
     static const int CELLS_PER_COLUMN = 32; //4 chunks of 8 tiles
     static const int CELL_SIZE = 8;
-    static const byte ENEMIES_LENGTH = 5;
+
     Player player;
-    Enemy enemy[ENEMIES_LENGTH];
+    EnemySpawner *spawner;
 
   public:
     Scene() {
       player.getBounds()->setX(2 * CELL_SIZE);
       player.getBounds()->setY(2 * CELL_SIZE);
       Camera::getInstance()->setBounds(CELLS_PER_ROW * CELL_SIZE, CELLS_PER_COLUMN * CELL_SIZE);
-      for (int i = 0; i < ENEMIES_LENGTH; i++) {
-        enemy[i].respawn(20 + i * 20, 20 + i * 20);
-      }
+
+      spawner = new EnemySpawner(Vector2(50,30));
     }
 
     void update() {
@@ -50,9 +49,7 @@ class Scene {
         }
       }
 
-      for (int i = 0; i < ENEMIES_LENGTH; i++) {
-        enemy[i].update(&player, this);
-      }
+      spawner->update(this);
     };
 
     void render() {
@@ -65,11 +62,9 @@ class Scene {
           renderChunk(i * 8,j * 8,chunk);
         }
       }
-      
+      spawner->render();
       player.render();
-      for (int i = 0; i < ENEMIES_LENGTH; i++) {
-        enemy[i].render();
-      }
+      
     };
 
     void renderChunk(int xOffset,int yOffset,const char *chunk){
@@ -108,6 +103,10 @@ class Scene {
           velY = calculateNewVelocity(y, velY);
         }
       }
+    };
+
+    Player* getPlayer(){
+      return &player;
     };
 
   private:

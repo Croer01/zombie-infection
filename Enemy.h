@@ -27,6 +27,8 @@ class Enemy {
     Rect getBounds();
 
     void respawn(byte x, byte y);
+
+    boolean isActive();
 };
 
 #endif

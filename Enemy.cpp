@@ -11,6 +11,7 @@ Enemy::Enemy() {
   bounds.setY(0);
   bounds.setW(8);
   bounds.setH(12);
+  active = false;
 };
 
 void Enemy::update(Player *player, Scene *scene) {
@@ -35,8 +36,8 @@ void Enemy::update(Player *player, Scene *scene) {
 
     bounds.setX(bounds.getX() + velX);
     bounds.setY(bounds.getY() + velY);
+    
     //check if hurt by bullet
-
     size_t bulletsLength = 0;
     Bullet *playerBullets = player->getBullets(bulletsLength);
 
@@ -68,4 +69,8 @@ void Enemy::respawn(byte x, byte y) {
   bounds.setX(x);
   bounds.setY(y);
   active = true;
+}
+
+boolean Enemy::isActive(){
+  return active;
 }
