@@ -10,6 +10,15 @@ EnemySpawner::EnemySpawner(Vector2 center) {
   active = true;
 }
 
+EnemySpawner::EnemySpawner() {
+  bounds.setX(-8);
+  bounds.setY(-4);
+  bounds.setW(16);
+  bounds.setH(8);
+  timer = millis();
+  active = true;
+}
+
 void EnemySpawner::update(Scene *scene) {
   Player *player = scene->getPlayer();
   if (active) {

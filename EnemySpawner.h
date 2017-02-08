@@ -17,6 +17,8 @@ class EnemySpawner {
     boolean active;
     
   public:
+    EnemySpawner();
+    
     EnemySpawner(Vector2 center);
 
     void update(Scene *scene);

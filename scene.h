@@ -8,15 +8,24 @@
 #include "SlimLib.h"
 #include "Sprites.h"
 
-/* 0 1 2
- * 7 8 3
- * 6 5 4
- */
-PROGMEM const unsigned char sceneLayout[] = {
-  0,1,1,2,
-  7,8,8,3,
-  7,8,9,3,
-  6,5,5,4
+//X,Y
+/**
+   Save entities positions in format X,Y
+   The first row is player and the others are spawners.
+   The third byte represent the number of spawners.
+*/
+PROGMEM const unsigned char scenePositions[] = {
+  16, 16,
+  2,
+  50, 30,
+  50, 50
+};
+
+PROGMEM const unsigned char sceneLayout[16] = {
+  0, 1, 1, 2,
+  7, 8, 8, 3,
+  7, 8, 9, 3,
+  6, 5, 5, 4
 };
 
 class Scene {
@@ -25,20 +34,27 @@ class Scene {
     static const int CELL_SIZE = 8;
 
     Player player;
-    EnemySpawner *spawner;
+    EnemySpawner **spawner;
+    int spawnerLength;
 
   public:
     Scene() {
-      player.getBounds()->setX(2 * CELL_SIZE);
-      player.getBounds()->setY(2 * CELL_SIZE);
+      Vector2 playerPos = getInitialPosition(0);
+      player.getBounds()->setX(playerPos.getX());
+      player.getBounds()->setY(playerPos.getY());
       Camera::getInstance()->setBounds(CELLS_PER_ROW * CELL_SIZE, CELLS_PER_COLUMN * CELL_SIZE);
 
-      spawner = new EnemySpawner(Vector2(50,30));
+      spawnerLength = (int)pgm_read_byte_near(scenePositions + 2);
+
+      spawner = new EnemySpawner*[spawnerLength];
+      for (int i = 0; i < spawnerLength; i++) {
+        spawner[i] = new EnemySpawner(getInitialPosition(3 + 2 * i));
+      }
     }
 
     void update() {
       player.update(this);
-      
+
       //check bullets collisions
       size_t bulletsLength = 0;
       Bullet *playerBullets = player.getBullets(bulletsLength);
@@ -49,7 +65,9 @@ class Scene {
         }
       }
 
-      spawner->update(this);
+      for (int i = 0; i < spawnerLength; i++) {
+        spawner[i]->update(this);
+      }
     };
 
     void render() {
@@ -59,15 +77,19 @@ class Scene {
 
           int chunkId = (int)pgm_read_byte_near(sceneLayout + index);
           char *chunk = sceneChunks[chunkId];
-          renderChunk(i * 8,j * 8,chunk);
+          renderChunk(i * 8, j * 8, chunk);
         }
       }
-      spawner->render();
+
+      for (int i = 0; i < spawnerLength; i++) {
+        spawner[i]->render();
+      }
+
       player.render();
-      
+
     };
 
-    void renderChunk(int xOffset,int yOffset,const char *chunk){
+    void renderChunk(int xOffset, int yOffset, const char *chunk) {
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
           int index = j * 8 + i;
@@ -75,7 +97,7 @@ class Scene {
 
           int x = xOffset * CELL_SIZE + i * CELL_SIZE;
           int y = yOffset * CELL_SIZE + j * CELL_SIZE;
-          if(tile != 0)
+          if (tile != 0)
             arduboy.drawBitmap(Camera::getInstance()->getX() + x, Camera::getInstance()->getY() + y, sceneAtlas + tile * CELL_SIZE, CELL_SIZE, CELL_SIZE, WHITE);
         }
       }
@@ -105,7 +127,7 @@ class Scene {
       }
     };
 
-    Player* getPlayer(){
+    Player* getPlayer() {
       return &player;
     };
 
@@ -116,8 +138,8 @@ class Scene {
       int y = pos.getY() / CELL_SIZE;
       int chunkXOffset = x / 8;
       int chunkYOffset = y / 8;
-      
-      char *chunk = sceneChunks[(int)pgm_read_byte_near(sceneLayout + (chunkXOffset+ chunkYOffset * 4))];
+
+      char *chunk = sceneChunks[(int)pgm_read_byte_near(sceneLayout + (chunkXOffset + chunkYOffset * 4))];
       return pgm_read_byte_near(chunk + ((y - chunkYOffset * 8) * 8) + (x - chunkXOffset * 8));
     };
 
@@ -133,6 +155,10 @@ class Scene {
       }
       return newVelocity;
     };
+
+    Vector2 getInitialPosition(int id) {
+      return Vector2((int)pgm_read_byte_near(scenePositions + id), (int)pgm_read_byte_near(scenePositions + id + 1));
+    }
 };
 
 #endif
