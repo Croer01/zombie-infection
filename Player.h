@@ -18,6 +18,7 @@ class Player {
     Rect *bounds;
     Bullet bullets[BULLETS_LENGTH];
     uint32_t timer;
+    int shootDirection;
 
     void shootBullet();
 

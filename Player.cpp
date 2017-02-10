@@ -5,12 +5,37 @@
 #include "scene.h"
 #include "SlimLib.h"
 
+Player::Player() {
+  this->playerImage = playerWalkRight;
+  bounds = new Rect();
+  bounds->setX(0);
+  bounds->setY(0);
+  bounds->setW(8);
+  bounds->setH(8);
+  timer = millis();
+  shootDirection = 1;
+};
+
 void Player::shootBullet() {
   boolean active = false;
   byte i = 0;
   while (!active && i < BULLETS_LENGTH) {
     if (!bullets[i].isActive()) {
-      bullets[i].respawn(playerImage == playerWalkRight ? bounds->getX() : bounds->getX() + bounds->getW(), bounds->getY() + 4, playerImage == playerWalkRight);
+      switch (shootDirection) {
+        case BULLET_UP:
+          bullets[i].respawn(bounds->getX() + bounds->getW() / 2, bounds->getY(), shootDirection);
+          break;
+        case BULLET_RIGHT:
+          bullets[i].respawn(bounds->getX() + bounds->getW(), bounds->getY() + bounds->getH() / 2, shootDirection);
+          break;
+        case BULLET_DOWN:
+          bullets[i].respawn(bounds->getX() + bounds->getW() / 2, bounds->getY() + bounds->getH(), shootDirection);
+          break;
+        case BULLET_LEFT:
+          bullets[i].respawn(bounds->getX(), bounds->getY() + bounds->getH() / 2, shootDirection);
+          break;
+      }
+
       active = true;
     }
     i++;
@@ -28,15 +53,6 @@ void Player::moveCamera(int offsetX, int offsetY) {
     Camera::getInstance()->moveCamera(offsetX, offsetY);
   }
 };
-Player::Player() {
-  this->playerImage = playerWalkRight;
-  bounds = new Rect();
-  bounds->setX(0);
-  bounds->setY(0);
-  bounds->setW(8);
-  bounds->setH(8);
-  timer = millis();
-};
 
 void Player::update(Scene *scene) {
   int velX = 0;
@@ -44,23 +60,27 @@ void Player::update(Scene *scene) {
   int previousX = bounds->getX();
   int previousY = bounds->getY();
 
+  if (arduboy.pressed(UP_BUTTON) && bounds->getY() > 0) {
+    velY = -PLAYER_SPEED;
+    shootDirection = 0;
+  }
+
+  if (arduboy.pressed(DOWN_BUTTON) && bounds->getY() < Camera::getInstance()->getH() - bounds->getH()) {
+    velY = PLAYER_SPEED;
+    shootDirection = 2;
+  }
+
   //move player
   if (arduboy.pressed(RIGHT_BUTTON) && bounds->getX() < Camera::getInstance()->getW() - bounds->getW()) {
     velX = PLAYER_SPEED;
     playerImage = playerWalkRight;
+    shootDirection = 1;
   }
 
   if (arduboy.pressed(LEFT_BUTTON) && bounds->getX() > 0) {
     velX = -PLAYER_SPEED;
     playerImage = playerWalkLeft;
-  }
-
-  if (arduboy.pressed(UP_BUTTON) && bounds->getY() > 0) {
-    velY = -PLAYER_SPEED;
-  }
-
-  if (arduboy.pressed(DOWN_BUTTON) && bounds->getY() < Camera::getInstance()->getH() - bounds->getH()) {
-    velY = PLAYER_SPEED;
+    shootDirection = 3;
   }
 
   scene->checkCollisionAndMove(*this->bounds, velX, velY);

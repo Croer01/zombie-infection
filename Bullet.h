@@ -3,10 +3,12 @@
 
 #include "SlimLib.h"
 
-#define BULLET_RIGHT true
-#define BULLET_LEFT false
+#define BULLET_UP 0
+#define BULLET_RIGHT 1
+#define BULLET_DOWN 2
+#define BULLET_LEFT 3
 
-typedef bool BulletDirection;
+typedef int BulletDirection;
 
 class Bullet {
     static const int BULLET_SPEED = 7;
